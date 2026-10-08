@@ -1,0 +1,39 @@
+/* You can add global styles to this file, and also import other style files */
+@import "tailwindcss";
+
+/* Пастельная палитра приложения (мягкий терракотово-персиковый акцент) */
+@theme {
+  --color-brand-50: #fdf8f5;
+  --color-brand-100: #f9ece5;
+  --color-brand-200: #f1d8cb;
+  --color-brand-300: #e5bda9;
+  --color-brand-400: #d49e84;
+  --color-brand-500: #c17f63;
+  --color-brand-600: #a8644c;
+  --color-brand-700: #8a503d;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+/* Внутренняя прокрутка закреплённой панели фильтров */
+.scroll-area {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-brand-300) transparent;
+}
+.scroll-area::-webkit-scrollbar {
+  width: 6px;
+}
+.scroll-area::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scroll-area::-webkit-scrollbar-thumb {
+  background: var(--color-brand-300);
+  border-radius: 9999px;
+}
+.scroll-area::-webkit-scrollbar-thumb:hover {
+  background: var(--color-brand-400);
+}
