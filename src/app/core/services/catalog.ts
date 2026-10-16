@@ -26,6 +26,20 @@ export interface Category {
   emoji: string;
 }
 
+/** Маппинг категории на локальную картинку */
+const CATEGORY_IMAGES: Record<number, string> = {
+  1: '/images/pizza.jpg',       // Пицца
+  2: '/images/roll.jpg',        // Суши
+  3: '/images/burger.jpg',      // Бургеры
+  4: '/images/desert.jpg',      // Десерты
+  5: '/images/drink.jpg',       // Напитки
+  6: '/images/pasta.jpg',       // Паста
+  7: '/images/salat.jpg',       // Салаты
+  8: '/images/soup.jpg',        // Супы
+  9: '/images/breakfast.jpg',   // Завтраки
+  10: '/images/grill.jpg',      // Гриль
+};
+
 /** Хелпер для стабильных картинок из Unsplash */
 const U = (id: string, w = 900) =>
   `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&q=80`;
@@ -46,11 +60,14 @@ interface DishSeed {
   tags: string[];
 }
 
-const mk = (p: DishSeed): Dish => ({
-  ...p,
-  imageUrl: U(p.ids[0]),
-  images: p.ids.map((id) => U(id)),
-});
+const mk = (p: DishSeed): Dish => {
+  const local = CATEGORY_IMAGES[p.categoryId] ?? '/images/grill.jpg';
+  return {
+    ...p,
+    imageUrl: local,
+    images: [local],
+  };
+};
 
 const DISHES: Dish[] = [
   // ─── Пицца ───
