@@ -7,7 +7,7 @@ import { Cart } from '../../core/services/cart';
   imports: [RouterLink, RouterLinkActive],
   template: `
     <nav class="fixed bottom-0 inset-x-0 z-40 bg-white border-t border-gray-200 md:hidden pb-[env(safe-area-inset-bottom)]">
-      <div class="grid grid-cols-4">
+      <div class="grid grid-cols-3">
         <a
           routerLink="/"
           routerLinkActive="text-brand-600"
@@ -37,14 +37,6 @@ import { Cart } from '../../core/services/cart';
               {{ cart.itemCount() }}
             </span>
           }
-        </a>
-        <a
-          routerLink="/account"
-          routerLinkActive="text-brand-600"
-          class="flex flex-col items-center gap-1 py-2.5 text-xs text-gray-500 transition"
-        >
-          <span class="text-xl leading-none">👤</span>
-          Профиль
         </a>
       </div>
     </nav>

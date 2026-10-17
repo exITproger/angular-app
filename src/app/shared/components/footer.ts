@@ -39,8 +39,6 @@ import { Catalog } from '../../core/services/catalog';
               <li><a routerLink="/" class="text-gray-500 hover:text-brand-600 transition">Главная</a></li>
               <li><a routerLink="/catalog" class="text-gray-500 hover:text-brand-600 transition">Всё меню</a></li>
               <li><a routerLink="/cart" class="text-gray-500 hover:text-brand-600 transition">Корзина</a></li>
-              <li><a routerLink="/account" class="text-gray-500 hover:text-brand-600 transition">Личный кабинет</a></li>
-              <li><a routerLink="/account" class="text-gray-500 hover:text-brand-600 transition">Мои заказы</a></li>
             </ul>
           </div>
 

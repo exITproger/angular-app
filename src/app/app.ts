@@ -22,13 +22,6 @@ import { Footer } from './shared/components/footer';
           >
             Меню
           </a>
-          <a
-            routerLink="/account"
-            routerLinkActive="text-brand-600 bg-brand-50"
-            class="px-4 py-2 rounded-lg text-gray-600 hover:text-brand-600 hover:bg-brand-50 transition font-medium"
-          >
-            Кабинет
-          </a>
         </nav>
 
         <a

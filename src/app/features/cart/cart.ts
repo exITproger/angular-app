@@ -1,7 +1,8 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CurrencyPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Cart } from '../../core/services/cart';
+import { Order, Orders } from '../../core/services/orders';
 import { Breadcrumbs } from '../../shared/components/breadcrumbs';
 import { ImgFallback } from '../../shared/directives/img-fallback';
 
@@ -13,7 +14,22 @@ import { ImgFallback } from '../../shared/directives/img-fallback';
       <app-breadcrumbs [items]="[{ label: 'Главная', link: '/' }, { label: 'Корзина' }]" />
       <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-6">Корзина</h1>
 
-      @if (cart.items().length === 0) {
+      @if (placedOrder(); as order) {
+        <div class="text-center py-16 bg-white rounded-2xl shadow-sm">
+          <p class="text-5xl mb-4">✅</p>
+          <p class="text-2xl font-bold text-gray-900 mb-2">Заказ оформлен!</p>
+          <p class="text-gray-500 mb-1">Заказ №{{ order.id }} принят в работу.</p>
+          <p class="text-sm text-gray-400 mb-6">Мы позвоним для подтверждения.</p>
+          <div class="flex flex-col sm:flex-row justify-center gap-3">
+            <a
+              routerLink="/catalog"
+              class="px-6 py-3 bg-brand-500 text-white rounded-xl hover:bg-brand-600 transition font-medium"
+            >
+              Вернуться в меню
+            </a>
+          </div>
+        </div>
+      } @else if (cart.items().length === 0) {
         <div class="text-center py-16 bg-white rounded-2xl shadow-sm">
           <p class="text-5xl mb-4">🛒</p>
           <p class="text-gray-500 mb-6">Корзина пуста</p>
@@ -86,6 +102,7 @@ import { ImgFallback } from '../../shared/directives/img-fallback';
           <p class="text-sm text-gray-500 mb-4">Доставка рассчитывается при оформлении</p>
           <button
             type="button"
+            (click)="checkout()"
             class="w-full px-6 py-3.5 bg-brand-500 text-white rounded-xl hover:bg-brand-600 active:scale-[0.99] transition font-semibold"
           >
             Оформить заказ
@@ -97,4 +114,13 @@ import { ImgFallback } from '../../shared/directives/img-fallback';
 })
 export class CartPage {
   readonly cart = inject(Cart);
+  private readonly orders = inject(Orders);
+
+  readonly placedOrder = signal<Order | null>(null);
+
+  checkout(): void {
+    if (!this.cart.items().length) return;
+    this.placedOrder.set(this.orders.place(this.cart.items()));
+    this.cart.clear();
+  }
 }
