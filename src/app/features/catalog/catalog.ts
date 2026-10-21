@@ -1,11 +1,12 @@
 import { Component, HostListener, computed, effect, inject, signal } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { Catalog, Dish } from '../../core/services/catalog';
 import { DishCard } from '../../shared/components/dish-card';
 import { QuickView } from '../../shared/components/quick-view';
 import { Breadcrumbs, Crumb } from '../../shared/components/breadcrumbs';
 import { SearchBox } from '../../shared/components/search-box';
+import { NavHistory } from '../../core/services/nav-history';
 
 type SortKey = 'popular' | 'rating' | 'price-asc' | 'price-desc' | 'new';
 
@@ -268,6 +269,7 @@ export class CatalogPage {
   readonly catalog = inject(Catalog);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private readonly navHistory = inject(NavHistory);
 
   readonly search = signal('');
   readonly category = signal<number | null>(null);
@@ -367,6 +369,23 @@ export class CatalogPage {
         this.page.set(1);
       }
     });
+
+    // Сохраняем состояние перед переходом в карточку товара
+    this.router.events.subscribe((e) => {
+      if (e instanceof NavigationStart && /^\/dish\//.test(e.url)) {
+        this.navHistory.saveState(this.page(), window.scrollY);
+      }
+    });
+
+    // При возврате из карточки товара — восстанавливаем страницу и скроллим
+    const restored = this.navHistory.restoreState();
+    if (restored) {
+      this.page.set(restored.page);
+      // После рендера карточек — скроллим к нужной позиции
+      setTimeout(() => {
+        window.scrollTo({ top: restored.scrollY, behavior: 'instant' });
+      }, 0);
+    }
   }
 
   onSearch(value: string): void {

@@ -9,7 +9,10 @@ import { ImgFallback } from '../directives/img-fallback';
   selector: 'app-dish-card',
   imports: [CurrencyPipe, RouterLink, ImgFallback],
   template: `
-    <div class="group relative rounded-2xl overflow-hidden bg-white shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col h-full">
+    <div
+      class="group relative rounded-2xl overflow-hidden bg-white shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col h-full"
+      [attr.data-dish-id]="dish().id"
+    >
       <a [routerLink]="['/dish', dish().id]" class="block relative overflow-hidden">
         <img
           appImgFallback
