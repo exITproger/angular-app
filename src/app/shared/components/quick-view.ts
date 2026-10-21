@@ -1,4 +1,4 @@
-import { Component, HostListener, inject, input, output } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit, inject, input, output } from '@angular/core';
 import { CurrencyPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Dish } from '../../core/services/catalog';
@@ -14,6 +14,7 @@ import { Carousel } from './carousel';
 
       <div
         class="relative bg-white w-full sm:max-w-4xl max-h-[92vh] flex flex-col overflow-hidden rounded-t-3xl sm:rounded-3xl shadow-2xl"
+        (wheel)="$event.stopPropagation()"
       >
         <button
           type="button"
@@ -24,7 +25,7 @@ import { Carousel } from './carousel';
           ✕
         </button>
 
-        <div class="overflow-y-auto">
+        <div class="overflow-y-auto scroll-area">
           <div class="grid md:grid-cols-2 gap-6 p-4 sm:p-6">
           <app-carousel [images]="dish().images" [alt]="dish().name" />
 
@@ -111,12 +112,37 @@ import { Carousel } from './carousel';
     </div>
   `,
 })
-export class QuickView {
+export class QuickView implements OnInit, OnDestroy {
   readonly dish = input.required<Dish>();
   readonly categoryName = input('');
   readonly close = output<void>();
 
   readonly cart = inject(Cart);
+
+  private savedScrollY = 0;
+  private previousOverflow = '';
+
+  ngOnInit(): void {
+    // запрещаем прокрутку фона, пока открыт предпросмотр
+    this.savedScrollY = window.scrollY;
+    this.previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    // фиксируем позицию страницы (для iOS)
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${this.savedScrollY}px`;
+    document.body.style.left = '0';
+    document.body.style.right = '0';
+  }
+
+  ngOnDestroy(): void {
+    // восстанавливаем прокрутку фона
+    document.body.style.overflow = this.previousOverflow;
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.left = '';
+    document.body.style.right = '';
+    window.scrollTo(0, this.savedScrollY);
+  }
 
   @HostListener('document:keydown.escape')
   onEscape(): void {
